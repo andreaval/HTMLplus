@@ -21,7 +21,7 @@
                 //console.time('loading');
                 var IsAnchor = function(url){
                     return (url.toString().charAt(0)=='#') ? true : false;
-                }
+                };
                 options = $.extend(true,{
                     win: {width:400,height:400,scrollbars:0,toolbar:0},
                     confirm: 'Are you sure you want to open the link?',
@@ -394,7 +394,7 @@
                     }
                 });
             }
-        }
+        };
         $.each(options.tags,function(i,tag){
             var tagOptions={};
             if(typeof options[tag] == 'object'){
