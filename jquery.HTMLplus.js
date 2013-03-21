@@ -1,12 +1,13 @@
 /*!
  * jQuery HTMLplus plugin
- * Version 1.0.0
+ * Version 1.0.1
  * @requires jQuery v1.3.2 or later
  *
  * Copyright (c) 2013 Andrea Vallorani, andrea.vallorani@gmail.com
  * Released under the MIT license
  */
 (function($) {
+    /*jshint debug:true, noarg:true, noempty:true, bitwise:true, undef:true, unused:true, browser:true, devel:true, jquery:true, indent:4*/
     $.fn.HTMLplus = function(options){
         options = $.extend(true,{
             tags: ['A','IFRAME','TEXTAREA'],
@@ -42,8 +43,8 @@
                 function parser(e){
                     var a=$(this);
                     if(a.hasClass(x+'disabled')){
-                       if(a.data('title') && options.disabledMsg=='alert') alert(a.data('title'));
-                       return false; 
+                        if(a.data('title') && options.disabledMsg=='alert') alert(a.data('title'));
+                        return false; 
                     }
                     if(a.hasClass(x+'print')){
                         window.setTimeout(window.print,0);
@@ -66,49 +67,49 @@
                         if(mask && $(mask).length){
                             msg=$(mask).html();
                             if(a.data('title')){
-                               msg=msg.replace(/\[title\]/g,a.data('title'));
+                                msg=msg.replace(/\[title\]/g,a.data('title'));
                             }
                             msg=msg.replace(/\[href]/g,url);
                             msg=msg.replace(/\[text]/g,a.text());
                         }
                         else if(a.data('title')) msg=a.data('title');
 
-                        if(options.confirmType!=false){
+                        if(options.confirmType!==false){
                             switch(options.confirmType){
-                                case 'dialog':
-                                    if(!jQuery.ui) return false;
-                                    $("<div/>").html(msg).dialog({
-                                        modal:true,
-                                        resizable:false,
-                                        buttons:{
-                                            Ok:function(){
-                                                if($(this).children('form').length==0){
-                                                    a.data('confirmed',true).click();
-                                                }
-                                                else $(this).children('form').submit();
-                                                $(this).dialog("close");
-                                            },
-                                            Cancel:function(){
-                                                $(this).dialog("close");
+                            case 'dialog':
+                                if(!jQuery.ui) return false;
+                                $("<div/>").html(msg).dialog({
+                                    modal:true,
+                                    resizable:false,
+                                    buttons:{
+                                        Ok:function(){
+                                            if($(this).children('form').length===0){
+                                                a.data('confirmed',true).click();
                                             }
+                                            else $(this).children('form').submit();
+                                            $(this).dialog("close");
+                                        },
+                                        Cancel:function(){
+                                            $(this).dialog("close");
                                         }
-                                    });
+                                    }
+                                });
                                 break;
-                                default:
-                                    var f=null;
-                                    eval('f='+options.confirmType);
-                                    f.call(a,msg,function(){
-                                         if($(mask+' form').length) $('form',this).submit();
+                            default:
+                                if(typeof options.confirmType==='function'){
+                                    options.confirmType(a,msg,function(){
+                                        if($(mask+' form').length) $('form',this).submit();
                                          else a.data('confirmed',true).click();
                                     });
-                             }
-                         }
-                         else if(confirm(msg)) return a.data('confirmed',true).triggerHandler('click');
-                         return false;
+                                }
+                            }
+                        }
+                        else if(confirm(msg)) return a.data('confirmed',true).triggerHandler('click');
+                        return false;
                     }
                     if(a.hasClass(x+'dialog')){
                         if(jQuery.ui){
-                            var sett=$.extend({},options.dialog,a.classPre(x+'dialog',1));
+                            var dSett=$.extend({},options.dialog,a.classPre(x+'dialog',1));
                             if(!IsAnchor(url)){
                                 var frame;
                                 if(a.hasClass(x+'dialog-ajax')){
@@ -117,62 +118,62 @@
                                 }
                                 else{
                                     frame=$('<iframe src="'+url+'" style="padding:0;"></iframe>');
-                                    sett.open=function(e,ui){
+                                    dSett.open=function(){
                                         frame.css('width',$(this).parent().width());
                                     };
                                 }
-                                sett.dragStart=sett.resizeStart=function(e,ui){
+                                dSett.dragStart=dSett.resizeStart=function(){
                                     frame.hide();
                                 };
-                                sett.dragStop=sett.resizeStop=function(e,ui){
+                                dSett.dragStop=dSett.resizeStop=function(){
                                     frame.show();
                                 };
                                 url=frame;
                             }
                             else url=$(url);
-                            if(a.data('title')) sett.title=a.data('title');
+                            if(a.data('title')) dSett.title=a.data('title');
 
                             var wP=$(window).width();
                             var hP=$(window).height();
-                            if(sett.full){
-                                sett.width=wP-15;
-                                sett.height=hP;
-                                sett.position = [3,3];
-                                if(sett.draggable==undefined) sett.draggable=false;
+                            if(dSett.full){
+                                dSett.width=wP-15;
+                                dSett.height=hP;
+                                dSett.position = [3,3];
+                                if(typeof dSett.draggable==='undefined') dSett.draggable=false;
                             }
                             else{
-                                if(sett.w) sett.width = sett.w;
-                                if(sett.h) sett.height = sett.h;
-                                if(sett.l && sett.t) sett.position = [sett.l,sett.t];
-                                if(sett.width){
-                                    var w=sett.width;
+                                if(dSett.w) dSett.width = dSett.w;
+                                if(dSett.h) dSett.height = dSett.h;
+                                if(dSett.l && dSett.t) dSett.position = [dSett.l,dSett.t];
+                                if(dSett.width){
+                                    var w=dSett.width;
                                     if(w.toString().charAt(w.length-1)=='p'){
-                                        w=parseInt(w)*(wP/100);
+                                        w=parseInt(w,10)*(wP/100);
                                     }
-                                    sett.width=Math.min(w,wP);
+                                    dSett.width=Math.min(w,wP);
                                 }
-                                if(sett.height){
-                                    var h=sett.height;
+                                if(dSett.height){
+                                    var h=dSett.height;
                                     if(h.toString().charAt(h.length-1)=='p'){
-                                        h=parseInt(h)*(hP/100);
+                                        h=parseInt(h,10)*(hP/100);
                                     }
-                                    sett.height=Math.min(h,hP);
+                                    dSett.height=Math.min(h,hP);
                                 }
                             }
-                            url.dialog(sett);
+                            url.dialog(dSett);
                         }
                         else alert('jqueryUI required!');
                         return false;
                     }
                     else if(a.hasClass(x+'win')){
                         e.preventDefault();
-                        var sett='';
+                        var wSett='';
                         var aSett=$.extend({},options.win,a.classPre(x+'win',1));
-                        var wP=$(window).width();
-                        var hP=$(window).height();
+                        var wPage=$(window).width();
+                        var hPage=$(window).height();
                         if(aSett.fullpage){
-                            aSett.width=wP;
-                            aSett.height=hP;
+                            aSett.width=wPage;
+                            aSett.height=hPage;
                             delete aSett.fullpage;
                         }
                         else if(aSett.fullscreen){
@@ -181,28 +182,27 @@
                             delete aSett.fullscreen;
                         }
                         else{
-                            var w=aSett.width;
-                            var h=aSett.height;
-                            if(w.toString().charAt(w.length-1)=='p'){
-                                w=parseInt(w)*(wP/100);
+                            var winW=aSett.width;
+                            var winH=aSett.height;
+                            if(winW.toString().charAt(winW.length-1)=='p'){
+                                winW=parseInt(winW,10)*(wPage/100);
                             }
-                            if(h.toString().charAt(h.length-1)=='p'){
-                                h=parseInt(h)*(hP/100);
+                            if(winH.toString().charAt(winH.length-1)=='p'){
+                                winH=parseInt(winH,10)*(hPage/100);
                             }
-                            aSett.width=Math.min(w,wP);
-                            aSett.height=Math.min(h,hP);
+                            aSett.width=Math.min(winW,wPage);
+                            aSett.height=Math.min(winH,hPage);
                             if(aSett.center){
-                                aSett.left = (wP/2)-(aSett.width/2);
-                                aSett.top = (hP/2)-(aSett.height/2);
+                                aSett.left = (wPage/2)-(aSett.width/2);
+                                aSett.top = (hPage/2)-(aSett.height/2);
                                 delete aSett.center;
                             }
                         }
                         $.each(aSett,function(i,v){
-                            sett+=','+i+'='+v;
+                            wSett+=','+i+'='+v;
                         });
-                        sett=sett.substr(1);
-                        console.log(sett);
-                        window.open(url,'win',sett);
+                        wSett=wSett.substr(1);
+                        window.open(url,'win',wSett);
                         return false;
                     }
                     else if(a.hasClass(x+'scroll')){
@@ -214,23 +214,24 @@
                     else if(a.hasClass(x+'notify')){
                         if(IsAnchor(url)) return false;
                         $.get(url,function(response){
-                            var sett=$.extend({},options.notify,a.classPre(x+'notify',1));
-                            switch(sett.type){
-                                case 'jGrowl':
-                                    if($.jGrowl){
-                                        var conf={};
-                                        if(sett.life) conf['life']=sett.life*1000;
-                                        else conf['sticky']=true;
-                                        $.jGrowl(response,conf);
-                                        break;
-                                    }
-                                case 'growlUI':
-                                    if($.growlUI){
-                                        var life = (sett.life) ? sett.life*1000 : undefined;
-                                        $.growlUI('',response,life);
-                                        break;
-                                    }
-                                default: alert(response);
+                            var nSett=$.extend({},options.notify,a.classPre(x+'notify',1));
+                            switch(nSett.type){
+                            case 'jGrowl':
+                                if($.jGrowl){
+                                    var conf={};
+                                    if(nSett.life) conf.life=nSett.life*1000;
+                                    else conf.sticky=true;
+                                    $.jGrowl(response,conf);
+                                }
+                                break;
+                            case 'growlUI':
+                                if($.growlUI){
+                                    var life = (nSett.life) ? nSett.life*1000 : undefined;
+                                    $.growlUI('',response,life);
+                                }
+                                break;
+                            default: 
+                                alert(response);
                             }
                         });
                         return false;
@@ -246,7 +247,7 @@
                             return false;
                         } 
                     }
-                };
+                }
 
                 nodes.unbind('click',$.fn.HTMLplus).click(parser);
                 //console.timeEnd('Aplus loading');
@@ -312,14 +313,14 @@
                         }
                         else{
                             $el.load(function(){
-                               if(!options.autoheightSpeed || !autoheight) loading.fadeOut('fast'); 
+                                if(!options.autoheightSpeed || !autoheight) loading.fadeOut('fast'); 
                             });
                         }
                     }
                 });
             },
 
-            TEXTAREA: function(nodes,options){
+            TEXTAREA: function(nodes){
 
                 nodes.each(function(){
                     var el=this;
