@@ -39,6 +39,9 @@ Popular examples:
 
 ##Changelog
 
+**1.0.1** (2013-03-21)
+Fix JSHint warnings
+
 **1.0.0** (2013-03-20)
 First version
 
