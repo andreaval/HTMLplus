@@ -1,13 +1,40 @@
 HTMLplus
 ==========
- HTMLplus is an unobtrusive script that adds useful features to HTML tag allowing webpages to maintain compatibility with all HTML/XHTML standards.
-
-To add new features to the HTML standard, HTMLplus simply uses the class attribute. In general, the class attribute is mostly used to point to a class in a style sheet. HTMLplus uses this attribute to make changes to HTML elements with a specified class. Example: adding classname "blank" to the tag "A", the plugin will open the link in new page.
-
-It's a plugin and requires jQuery library 1.3.2 and above to work. Tested on Internet Explorer 6/7/8, Firefox, Safari, Opera, and Chrome. 
 
 Site project: http://htmlplus.simplit.it
 
+##Using
+Loading:
+```html
+<head>
+    <script src="/path/to/jquery.HTMLplus.js" type="text/javascript" charset="utf-8"></script>
+    <script>
+        $('body').HTMLplus();
+    </script>
+</head>
+```
+
+Popular examples:
+```html
+<body>
+    //open link in new window
+    <a class="blank" href="page.htm">Link 1</a>
+    
+    //open link in a popup window
+    <a class="win" href="page.htm">Link 2</a>
+    
+    //open link in a jqueryUI dialog
+    <a class="dialog" href="page.htm">Link 3</a>
+    
+    //block iframe until is loading
+    <iframe class="loading" src="page.htm">Link 4</iframe>
+    
+    //max 50 chars in the textarea
+    <textarea class="maxlength-50">Lorem ipsum dolor sit amet, consectetur ...</textarea>
+    
+    //view all cases in the project site ...
+</body>
+```
 
 ##Changelog
 
