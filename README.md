@@ -7,6 +7,7 @@ Site project: http://htmlplus.simplit.it
 Loading:
 ```html
 <head>
+    <script src="/path/to/jquery.js" type="text/javascript" charset="utf-8"></script>
     <script src="/path/to/jquery.HTMLplus.js" type="text/javascript" charset="utf-8"></script>
     <script>
         $('body').HTMLplus();
