@@ -32,6 +32,9 @@ Popular examples:
     
     //max 50 chars in the textarea
     <textarea class="maxlength-50">Lorem ipsum dolor sit amet, consectetur ...</textarea>
+
+    //sets the height of the div to the same height of the parent element
+    <div class="parentheight">Lorem ipsum dolor sit amet, consectetur ...</div>
     
     //view all cases in the project site ...
 </body>
@@ -39,11 +42,17 @@ Popular examples:
 
 ##Changelog
 
+**1.1.0** (2013-03-29)
+* Add class **parentheight** for DIV elements
+* Add class **language-**_value_ for CODE elements
+* Add general option **disableTags**
+* Reorganized code to extend/add classnames by a custom plugin
+
 **1.0.1** (2013-03-21)
-Fix JSHint warnings
+* Fix JSHint warnings
 
 **1.0.0** (2013-03-20)
-First version
+* First version
 
 ##Contribute
 
