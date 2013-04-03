@@ -298,21 +298,36 @@
     $.fn.HTMLplus.DIV = function(nodes,options,x){
         nodes.each(function(){
             var $el=$(this);
-            if($el.hasClass(x+'parentheight')){
-                var newHeight;
-                if($el.parent().is('body')){
-                    var body=$el.parent();
-                    if($(window).height()>body.height()){
-                        newHeight=$(window).height()-parseInt(body.css('marginTop'),10)-parseInt(body.css('marginBottom'),10);
-                    }
-                    else{
-                        newHeight=body.height();
-                    }
+            var heightas=$el.classPre(x+'heightas');
+            if(heightas){
+                var newHeight=0;
+                switch(heightas){
+                    case 'parent':
+                        if($el.parent().is('body')){
+                            var body=$el.parent();
+                            if($(window).height()>body.height()){
+                                newHeight=$(window).height()-parseInt(body.css('marginTop'),10)-parseInt(body.css('marginBottom'),10);
+                            }
+                            else{
+                                newHeight=body.height();
+                            }
+                        }
+                        else{
+                            newHeight=$el.parent().height();
+                        }
+                    break;
+                    case 'sibling':
+                        $el.parent().children('div').each(function(){
+                            if($(this).height()>newHeight){
+                                newHeight=$(this).height();
+                            }
+                        });
+                    break;
+                    default: var $obj=$('#'+heightas);
+                             if($obj.length) newHeight=$obj.eq(0).height();
                 }
-                else{
-                    newHeight=$el.parent().height();
-                }
-                $el.height(newHeight);
+                
+                if($el.height()<newHeight) $el.css('height',newHeight);
             }
             /*else{
                 var pheight=$el.classPre(x+'pheight');

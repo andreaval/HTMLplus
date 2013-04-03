@@ -42,8 +42,8 @@ Popular examples:
 
 ##Changelog
 
-**1.1.0** (2013-03-29)
-* Add class **parentheight** for DIV elements
+**1.1.0** (2013-04-02)
+* Add class **heightas-**_value_ for DIV elements
 * Add class **language-**_value_ for CODE elements
 * Add general option **disableTags**
 * Reorganized code to extend/add classnames by a custom plugin
