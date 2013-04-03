@@ -1,5 +1,7 @@
 HTMLplus
 ==========
+HTMLplus is a JQuery plugin that adds useful features to HTML tags, allowing webpages to maintain compatibility with all HTML/XHTML standards.
+To add new features to the HTML standard, HTMLplus simply uses the class attribute. In general, the class attribute is mostly used to point to a class in a style sheet. HTMLplus uses this attribute to add new features to html tags.
 
 Site project: http://htmlplus.simplit.it
 
@@ -34,7 +36,7 @@ Popular examples:
     <textarea class="maxlength-50">Lorem ipsum dolor sit amet, consectetur ...</textarea>
 
     //sets the height of the div to the same height of the parent element
-    <div class="parentheight">Lorem ipsum dolor sit amet, consectetur ...</div>
+    <div class="heightas-parent">Lorem ipsum dolor sit amet, consectetur ...</div>
     
     //view all cases in the project site ...
 </body>
