@@ -44,6 +44,12 @@ Popular examples:
 
 ##Changelog
 
+**1.2.0** (2013-04-17)
+* Add class **ajax** for A elements
+* Add class **ajax-to-**_value_ for A elements
+* Add class **ajax-from-**_value_ for A elements
+* Add option **ajax** for A elements
+
 **1.1.0** (2013-04-02)
 * Add class **heightas-**_value_ for DIV elements
 * Add class **language-**_value_ for CODE elements

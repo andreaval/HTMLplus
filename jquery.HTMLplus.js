@@ -1,7 +1,7 @@
 /*!
  * jQuery HTMLplus plugin
- * Version 1.1.0
- * @requires jQuery v1.3.2 or later
+ * Version 1.2.0
+ * @requires jQuery v1.5.0 or later
  *
  * Copyright (c) 2013 Andrea Vallorani, andrea.vallorani@gmail.com
  * Released under the MIT license
@@ -30,7 +30,7 @@
                 if(typeof options[tag] === 'object'){
                     tagOptions=options[tag];
                 }
-                var nodes=($root.is(tag)) ? $root : $root.find(tag+'[class]');
+                var nodes=($root.is(tag)) ? $root : $(tag+'[class]',$root);
                 $.fn.HTMLplus[tag](nodes,tagOptions,options.prefix);
             }
         });
@@ -48,7 +48,8 @@
             disabledMsg: 'alert',
             scroll: {speed:300,offsetY:0},
             notify: {life:10,type:null},
-            dialog: {dialogClass:'htmlplus-dialog'}
+            dialog: {dialogClass:'htmlplus-dialog'},
+            ajax: {loadMsg:'<img src="loader.gif" />'}
         },options);
 
         nodes.filter('.'+x+'confirm,.'+x+'dialog,.'+x+'disabled').each(function(){
@@ -126,7 +127,30 @@
                 else if(confirm(msg)) return a.data('confirmed',true).triggerHandler('click');
                 return false;
             }
-            if(a.hasClass(x+'dialog')){
+            if(a.hasClass('ajax')){
+                var ajaxSett=$.extend({},options.ajax,a.classPre(x+'ajax',1));
+                var aId = (typeof(a.attr('id'))==='undefined') ? a.text() : a.attr('id');
+                ajaxSett.to = (ajaxSett.to===null) ? 'body' : '#'+ajaxSett.to;
+                if(typeof(ajaxSett.from)==='undefined' || ajaxSett.from===null) ajaxSett.from=ajaxSett.to;
+                var to=$(ajaxSett.to);
+                var localCache=to.children('div[data-rel="'+aId+'"]');
+                var toH=to.height();
+                to.children().hide();
+                if(localCache.length){
+                    localCache.show();
+                }
+                else{
+                    var container=$('<div data-rel="'+aId+'" />');
+                    container.html('<div class="loader" style="text-align:center;line-height:'+toH+'px;">'+ajaxSett.loadMsg+'</div>').appendTo(to);
+                    $.ajax({url:url,dataType:'html'}).done(function(data){
+                        data = '<div>'+data.replace(/^[\s\S]*<body.*?>|<\/body>[\s\S]*$/g, '')+'</div>';
+                        if(ajaxSett.to==='body') container.html($(data).html());
+                        else container.html($(data).find(ajaxSett.from).html());
+                    });
+                }
+                return false;
+            }
+            else if(a.hasClass(x+'dialog')){
                 if(jQuery.ui){
                     var dSett=$.extend({},options.dialog,a.classPre(x+'dialog',1));
                     if(!IsAnchor(url)){
@@ -302,29 +326,30 @@
             if(heightas){
                 var newHeight=0;
                 switch(heightas){
-                    case 'parent':
-                        if($el.parent().is('body')){
-                            var body=$el.parent();
-                            if($(window).height()>body.height()){
-                                newHeight=$(window).height()-parseInt(body.css('marginTop'),10)-parseInt(body.css('marginBottom'),10);
-                            }
-                            else{
-                                newHeight=body.height();
-                            }
+                case 'parent':
+                    if($el.parent().is('body')){
+                        var body=$el.parent();
+                        if($(window).height()>body.height()){
+                            newHeight=$(window).height()-parseInt(body.css('marginTop'),10)-parseInt(body.css('marginBottom'),10);
                         }
                         else{
-                            newHeight=$el.parent().height();
+                            newHeight=body.height();
                         }
+                    }
+                    else{
+                        newHeight=$el.parent().height();
+                    }
                     break;
-                    case 'sibling':
-                        $el.parent().children('div').each(function(){
-                            if($(this).height()>newHeight){
-                                newHeight=$(this).height();
-                            }
-                        });
+                case 'sibling':
+                    $el.parent().children('div').each(function(){
+                        if($(this).height()>newHeight){
+                            newHeight=$(this).height();
+                        }
+                    });
                     break;
-                    default: var $obj=$('#'+heightas);
-                             if($obj.length) newHeight=$obj.eq(0).height();
+                default: 
+                    var $obj=$('#'+heightas);
+                    if($obj.length) newHeight=$obj.eq(0).height();
                 }
                 
                 if($el.height()<newHeight) $el.css('height',newHeight);
