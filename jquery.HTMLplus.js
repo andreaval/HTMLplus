@@ -1,6 +1,6 @@
 /*!
  * jQuery HTMLplus plugin
- * Version 1.2.0
+ * Version 1.2.1
  * @requires jQuery v1.5.0 or later
  *
  * Copyright (c) 2013 Andrea Vallorani, andrea.vallorani@gmail.com
@@ -26,12 +26,15 @@
         
         $.each(options.tags,function(i,tag){
             if(!inArray(tag,options.disableTags)){
-                var tagOptions={};
-                if(typeof options[tag] === 'object'){
-                    tagOptions=options[tag];
+                var nodes=$(tag+'[class]',$root);
+                if($root.is(tag+'[class]')) nodes.push($root.get(0));
+                if(nodes.length){
+                    var tagOptions={};
+                    if(typeof options[tag] === 'object'){
+                        tagOptions=options[tag];
+                    }
+                    $.fn.HTMLplus[tag](nodes,tagOptions,options.prefix);
                 }
-                var nodes=($root.is(tag)) ? $root : $(tag+'[class]',$root);
-                $.fn.HTMLplus[tag](nodes,tagOptions,options.prefix);
             }
         });
     };
