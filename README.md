@@ -44,6 +44,10 @@ Popular examples:
 
 ##Changelog
 
+**1.2.1** (2013-04-19)
+* Fixed error in tag selection
+* Fixed error in IFRAME options
+
 **1.2.0** (2013-04-17)
 * Add class **ajax** for A elements
 * Add class **ajax-to-**_value_ for A elements
@@ -57,7 +61,7 @@ Popular examples:
 * Reorganized code to extend/add classnames by a custom plugin
 
 **1.0.1** (2013-03-21)
-* Fix JSHint warnings
+* Make JSHint friendly
 
 **1.0.0** (2013-03-20)
 * First version
