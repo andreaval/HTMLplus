@@ -370,9 +370,9 @@
     };
     
     $.fn.HTMLplus.IFRAME = function(nodes,options,x){
-        options = $.extend({
+        options = $.extend(true,{
             autoheightSpeed:600,
-            loadingCss:{},
+            loadingCss:{opacity:0.8,background:'#ddd',textAlign:'center'},
             loadingHtml:'loading ...'
         },options);
         nodes.each(function(){
@@ -421,8 +421,7 @@
             if($el.hasClass(x+'loading')){
                 var pos = $el.offset();
                 var base=$.extend({},options.loadingCss,{width:$el.outerWidth(),height:$el.outerHeight(),
-                          lineHeight:$el.height()+'px',position:'absolute',top:pos.top,
-                          left:pos.left,opacity:0.8,background:'#ddd',textAlign:'center'});
+                          lineHeight:$el.height()+'px',position:'absolute',top:pos.top,left:pos.left});
                 loading=$('<div>').css(base).html(options.loadingHtml).appendTo('body');
                 if(isIE && el.contentWindow.document.body !== null){
                     loading.fadeOut('fast');
