@@ -1,6 +1,6 @@
 /*!
  * jQuery HTMLplus plugin
- * Version 1.2.1
+ * Version 1.2.2
  * @requires jQuery v1.5.0 or later
  *
  * Copyright (c) 2013 Andrea Vallorani, andrea.vallorani@gmail.com
@@ -239,8 +239,17 @@
                     aSett.width=Math.min(winW,wPage);
                     aSett.height=Math.min(winH,hPage);
                     if(aSett.center){
-                        aSett.left = (wPage/2)-(aSett.width/2);
-                        aSett.top = (hPage/2)-(aSett.height/2);
+                        var screenX, screenY;
+                        if(navigator.userAgent.match(/msie/i)){
+                            screenX=window.screenLeft;
+                            screenY=window.screenTop;
+                        }
+                        else{
+                            screenX=window.screenX;
+                            screenY=window.screenY;
+                        }
+                        aSett.left = (wPage/2)-(aSett.width/2)+screenX;
+                        aSett.top = (hPage/2)-(aSett.height/2)+screenY;
                         delete aSett.center;
                     }
                 }
