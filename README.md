@@ -44,6 +44,9 @@ Popular examples:
 
 ##Changelog
 
+**1.2.2** (2013-05-08)
+* Fixed a bug in the class **win-center** of the tag A. The pop-up window was not centered correctly if the browser was not in fullscreen mode 
+
 **1.2.1** (2013-04-19)
 * Fixed error in tag selection
 * Fixed error in IFRAME options
