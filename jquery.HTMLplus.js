@@ -1,6 +1,6 @@
 /*!
  * jQuery HTMLplus plugin
- * Version 1.2.2
+ * Version 1.3.0
  * @requires jQuery v1.5.0 or later
  *
  * Copyright (c) 2013 Andrea Vallorani, andrea.vallorani@gmail.com
@@ -437,7 +437,7 @@
                 }
                 else{
                     $el.load(function(){
-                        if(!options.autoheightSpeed || !autoheight) loading.fadeOut('fast'); 
+                        if(!options.autoheightSpeed || !autoheight) loading.fadeOut('fast');
                     });
                 }
             }
@@ -445,37 +445,59 @@
     };
     
     $.fn.HTMLplus.TEXTAREA = function(nodes,options,x){
+        options = $.extend(true,{
+            lb:'\n'
+        },options);
         nodes.each(function(){
             var el=this;
             var $el=$(el);
-            if($el.hasClass(x+'autoheight')){
-                var rows=$el.attr('rows');
-                $el.attr('rows',1);
-                var maxH = parseInt($el.css('maxHeight'),10);
-                if(maxH && maxH > 0){
-                    $el.height(Math.min(el.scrollHeight,maxH));
+            var $mirror=null;
+            var setHeight=function(){
+                if(!$mirror){
+                    var $mirror=$('<div class="autogrow-mirror"></div>').css({
+                    display:'none',wordWrap:'break-word',
+                    padding:$el.css('padding'),width:$el.css('width'),
+                    fontFamily:$el.css('font-family'),fontSize:$el.css('font-size'),
+                    lineHeight:$el.css('line-height'),maxHeight:$el.css('max-height')});
+                    $mirror.insertAfter($el);
+                    $el.css({overflow:'hidden',minHeight:$el.attr('rows')+"em"});
                 }
-                else{
-                    $el.height(el.scrollHeight);
-                }
-                $el.attr('rows',rows);
+                $mirror.html(String($el.val()).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br />')+'.<br/>.');
+                $el.height($mirror.height());
             }
+            if($el.hasClass(x+'autoheight')) setHeight();
             var maxLength=$el.classPre(x+'maxlength',false);
             var lbox=$el.classPre(x+'lbox',false);
             if(lbox){
                 lbox=$('#'+lbox).eq(0);
-            } 
+                var lboxInput=lbox.is(':input');
+                var invertCount=(!lboxInput && parseInt(lbox.html())>0) ? true : false;
+            }
             if(maxLength || lbox){
-                $el.bind('keyup change',function(){
+                $el.keypress(function(e){
+                    var c=String.fromCharCode(e.charCode==undefined ? e.keyCode : e.charCode);
+                    return (e.ctrlKey || e.metaKey || c=='\u0000' || $el.val().length < maxLength);
+                }).keyup(function(){
                     var txt = $el.val();
-                    var used = txt.length;
-                    if(maxLength && (used > maxLength)) {
+                    var t=(options.lb=='\n') ? '~' : '~~';
+                    var used = txt.replace(/\r\n/g,t).replace(/\n/g,t).length;
+                    if(maxLength && (used > maxLength)){
+                        var lines = txt.split(/\r\n|\n/);
+			txt = '';
+			var i = 0;
+			while(txt.length<maxLength && i<lines.length){
+                            txt += lines[i].substring(0,maxLength-txt.length)+options.lb;
+                            i++;
+			}
                         $el.val(txt.substring(0,maxLength));
+                        $el[0].scrollTop = $el[0].scrollHeight; //Scroll to bottom
                         used = maxLength;
                     }
                     if(lbox){
-                        if(lbox.is(':input')) lbox.val(used);
-                        else lbox.html(used); 
+                        if(lboxInput) lbox.val(used);
+                        else{
+                            lbox.html((invertCount) ? (maxLength-used) : used);
+                        }
                     }
                 });
                 $el.trigger('keyup');
@@ -486,7 +508,7 @@
                 wbox=$('#'+wbox).eq(0);
             } 
             if(maxWords || wbox){
-                $el.bind('keyup change',function(){
+                $el.keyup(function(){
                     var txt = $el.val();
                     var len = (txt==='') ? [] : txt.replace(/\s+$/,"").split(/[\s]+/);
                     var used = len.length;
@@ -515,6 +537,10 @@
                     }
                 });
                 $el.trigger('keyup');
+            }
+            if($el.hasClass(x+'autogrow')){
+                $el.keyup(setHeight);
+                setHeight();
             }
         });
     };
