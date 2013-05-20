@@ -455,7 +455,9 @@
             var setHeight=function(){
                 if(!$mirror){
                     $mirror=$('<div class="autogrow-mirror"></div>').css({
-                        display:'none',
+                        display:'block',
+                        position:'absolute',
+                        visibility:'hidden',
                         wordWrap:'break-word',
                         padding:$el.css('padding'),
                         width:$el.css('width'),
@@ -467,7 +469,7 @@
                     $mirror.insertAfter($el);
                     $el.css({overflow:'hidden',minHeight:$el.attr('rows')+"em"});
                 }
-                $mirror.html(String($el.val()).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br />')+'.<br/>.');
+                $mirror.html($el.val().toString().replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br />')+'.<br/>.<br/>.');
                 $el.height($mirror.height());
             };
             if($el.hasClass(x+'autoheight')) setHeight();
@@ -480,8 +482,11 @@
             }
             if(maxLength || lbox){
                 $el.keypress(function(e){
-                    var c=String.fromCharCode(e.charCode===undefined ? e.keyCode : e.charCode);
-                    return (e.ctrlKey || e.metaKey || c==='\u0000' || $el.val().length < maxLength);
+                    if(maxLength){
+                        var c=String.fromCharCode(e.charCode===undefined ? e.keyCode : e.charCode);
+                        return (e.ctrlKey || e.metaKey || c==='\u0000' || $el.val().length < maxLength);
+                    }
+                    else return true;
                 }).keyup(function(){
                     var txt = $el.val();
                     var t=(options.lb==='\n') ? '~' : '~~';
