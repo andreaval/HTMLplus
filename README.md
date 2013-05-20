@@ -44,7 +44,7 @@ Popular examples:
 
 ##Changelog
 
-**1.3.0** (2013-05-17)
+**1.3.0** (2013-05-20)
 * Add class **autogrow** for TEXTAREA elements
 * Improved class **autoheight** for TEXTAREA elements
 * Add option **lb** for TEXTAREA elements

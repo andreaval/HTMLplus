@@ -454,41 +454,46 @@
             var $mirror=null;
             var setHeight=function(){
                 if(!$mirror){
-                    var $mirror=$('<div class="autogrow-mirror"></div>').css({
-                    display:'none',wordWrap:'break-word',
-                    padding:$el.css('padding'),width:$el.css('width'),
-                    fontFamily:$el.css('font-family'),fontSize:$el.css('font-size'),
-                    lineHeight:$el.css('line-height'),maxHeight:$el.css('max-height')});
+                    $mirror=$('<div class="autogrow-mirror"></div>').css({
+                        display:'none',
+                        wordWrap:'break-word',
+                        padding:$el.css('padding'),
+                        width:$el.css('width'),
+                        fontFamily:$el.css('font-family'),
+                        fontSize:$el.css('font-size'),
+                        lineHeight:$el.css('line-height'),
+                        maxHeight:$el.css('max-height')
+                    });
                     $mirror.insertAfter($el);
                     $el.css({overflow:'hidden',minHeight:$el.attr('rows')+"em"});
                 }
                 $mirror.html(String($el.val()).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br />')+'.<br/>.');
                 $el.height($mirror.height());
-            }
+            };
             if($el.hasClass(x+'autoheight')) setHeight();
             var maxLength=$el.classPre(x+'maxlength',false);
             var lbox=$el.classPre(x+'lbox',false);
             if(lbox){
                 lbox=$('#'+lbox).eq(0);
                 var lboxInput=lbox.is(':input');
-                var invertCount=(!lboxInput && parseInt(lbox.html())>0) ? true : false;
+                var invertCount=(!lboxInput && parseInt(lbox.html(),10)>0) ? true : false;
             }
             if(maxLength || lbox){
                 $el.keypress(function(e){
-                    var c=String.fromCharCode(e.charCode==undefined ? e.keyCode : e.charCode);
-                    return (e.ctrlKey || e.metaKey || c=='\u0000' || $el.val().length < maxLength);
+                    var c=String.fromCharCode(e.charCode===undefined ? e.keyCode : e.charCode);
+                    return (e.ctrlKey || e.metaKey || c==='\u0000' || $el.val().length < maxLength);
                 }).keyup(function(){
                     var txt = $el.val();
-                    var t=(options.lb=='\n') ? '~' : '~~';
+                    var t=(options.lb==='\n') ? '~' : '~~';
                     var used = txt.replace(/\r\n/g,t).replace(/\n/g,t).length;
                     if(maxLength && (used > maxLength)){
                         var lines = txt.split(/\r\n|\n/);
-			txt = '';
-			var i = 0;
-			while(txt.length<maxLength && i<lines.length){
+                        txt = '';
+                        var i = 0;
+                        while(txt.length<maxLength && i<lines.length){
                             txt += lines[i].substring(0,maxLength-txt.length)+options.lb;
                             i++;
-			}
+                        }
                         $el.val(txt.substring(0,maxLength));
                         $el[0].scrollTop = $el[0].scrollHeight; //Scroll to bottom
                         used = maxLength;
