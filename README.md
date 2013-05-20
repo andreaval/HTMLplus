@@ -44,6 +44,11 @@ Popular examples:
 
 ##Changelog
 
+**1.3.0** (2013-05-17)
+* Add class **autogrow** for TEXTAREA elements
+* Improved class **autoheight** for TEXTAREA elements
+* Add option **lb** for TEXTAREA elements
+
 **1.2.2** (2013-05-08)
 * Fixed a bug in the class **win-center** of the tag A. The pop-up window was not centered correctly if the browser was not in fullscreen mode 
 
