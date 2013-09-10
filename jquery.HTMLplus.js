@@ -1,6 +1,6 @@
 /*!
  * jQuery HTMLplus plugin
- * Version 1.3.0
+ * Version 1.3.1
  * @requires jQuery v1.5.0 or later
  *
  * Copyright (c) 2013 Andrea Vallorani, andrea.vallorani@gmail.com
@@ -363,8 +363,7 @@
                     var $obj=$('#'+heightas);
                     if($obj.length) newHeight=$obj.eq(0).height();
                 }
-                
-                if($el.height()<newHeight) $el.css('height',newHeight);
+                $el.css('height',newHeight);
             }
             /*else{
                 var pheight=$el.classPre(x+'pheight');
