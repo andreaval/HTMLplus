@@ -44,6 +44,9 @@ Popular examples:
 
 ##Changelog
 
+**1.3.2** (2013-09-16)
+* Fixed bug in the creation of a new window
+
 **1.3.1** (2013-09-10)
 * Fixed bug in the class **height-as** of the DIV tag. Fix for IE9/IE10
 

@@ -1,6 +1,6 @@
 /*!
  * jQuery HTMLplus plugin
- * Version 1.3.1
+ * Version 1.3.2
  * @requires jQuery v1.5.0 or later
  *
  * Copyright (c) 2013 Andrea Vallorani, andrea.vallorani@gmail.com
@@ -213,6 +213,10 @@
             }
             else if(a.hasClass(x+'win')){
                 e.preventDefault();
+                if(!a.data('win-id')){
+                    a.data('win-id','win_'+((a.is('[id]')) ? a.attr('id') : new Date().getTime()));
+                }
+                var winID=a.data('win-id');
                 var wSett='';
                 var aSett=$.extend({},options.win,a.classPre(x+'win',1));
                 var wPage=$(window).width();
@@ -257,7 +261,11 @@
                     wSett+=','+i+'='+v;
                 });
                 wSett=wSett.substr(1);
-                window.open(url,'win',wSett);
+                var myWin=window.open('',winID,wSett);
+                if(myWin.location.href==='about:blank'){
+                    myWin.location.href = url;
+                }
+                myWin.focus();
                 return false;
             }
             else if(a.hasClass(x+'scroll')){
