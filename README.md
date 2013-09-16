@@ -1,7 +1,7 @@
-HTMLplus
+HTML+
 ==========
-HTMLplus is a JQuery plugin that adds useful features to HTML tags, allowing webpages to maintain compatibility with all HTML/XHTML standards.
-To add new features to the HTML standard, HTMLplus simply uses the class attribute. In general, the class attribute is mostly used to point to a class in a style sheet. HTMLplus uses this attribute to add new features to html tags.
+HTML+ is a JQuery plugin that adds useful features to HTML tags, allowing webpages to maintain compatibility with all HTML/XHTML standards.
+To add new features to the HTML standard, HTML+ simply uses the class attribute. In general, the class attribute is mostly used to point to a class in a style sheet. HTML+ uses this attribute to add new features to html tags.
 
 Site project: http://htmlplus.simplit.it
 
