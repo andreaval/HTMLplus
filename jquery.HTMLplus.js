@@ -1,6 +1,6 @@
 /*!
  * jQuery HTMLplus plugin
- * Version 1.3.2
+ * Version 1.4.0b1
  * @requires jQuery v1.5.0 or later
  *
  * Copyright (c) 2013 Andrea Vallorani, andrea.vallorani@gmail.com
@@ -52,7 +52,8 @@
             scroll: {speed:300,offsetY:0},
             notify: {life:10,type:null},
             dialog: {dialogClass:'htmlplus-dialog'},
-            ajax: {loadMsg:'<img src="loader.gif" />'}
+            ajax: {loadMsg:'<img src="loader.gif" />'},
+            menu: {pos:'bottom',closeOnClick:true,offset:3}
         },options);
 
         nodes.filter('.'+x+'confirm,.'+x+'dialog,.'+x+'disabled').each(function(){
@@ -266,6 +267,45 @@
                     myWin.location.href = url;
                 }
                 myWin.focus();
+                return false;
+            }
+            else if(a.hasClass(x+'menu')){
+                if(!IsAnchor(url)) return false;
+                if($(url).is(':visible')) $(url).hide();
+                else{
+                    var menuConf=$.extend({},options.menu,a.classPre(x+'menu',1));
+                    var pos = a.position();
+                    var off = a.offset();
+                    var uW = $(url).width();
+                    var aW = a.width();
+                    var dW = $(document).width();
+                    switch(menuConf.pos){
+                    case 'bottom':
+                        if(off.left+uW>dW) pos.left-=uW-aW;
+                        pos.top+=a.outerHeight()+menuConf.offset;
+                        break;
+                    case 'top':
+                        if(off.left+uW>dW) pos.left-=uW-aW;
+                        pos.top-=menuConf.offset+$(url).height();
+                        break;
+                    case 'right':
+                        if(off.left+uW>dW) pos.left-=uW+menuConf.offset;
+                        else pos.left+=aW+menuConf.offset;
+                        break;
+                    case 'left':
+                        if(off.left<uW) pos.left+=aW+menuConf.offset;
+                        else pos.left-=uW+menuConf.offset;
+                        break;
+                    default: 
+                        return false;
+                    }
+                    $(url).css({zIndex:1001,position:'absolute',left:pos.left,top:pos.top}).show();
+                    if(menuConf.closeOnClick && !$(url).data('fhide')){
+                        $(url).find('*').click(function(){
+                            $(url).data('fhide',1).hide();
+                        });
+                    }
+                }
                 return false;
             }
             else if(a.hasClass(x+'scroll')){
