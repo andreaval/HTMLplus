@@ -44,6 +44,9 @@ Popular examples:
 
 ##Changelog
 
+**1.4.0** (not yet released)
+* Add class **menu** for A elements
+
 **1.3.2** (2013-09-16)
 * Fixed bug in the creation of a new window
 
