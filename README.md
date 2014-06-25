@@ -50,8 +50,8 @@ Popular examples:
 * Add option **win.check** for A elements
 * Add class **zoom-inline** for IMG elements
 * Add class **zoom-popup** for IMG elements
-* Add class **zoom-max-**_value_ for DIV elements
-* Add class **figcaption** for DIV elements
+* Add class **zoom-max-**_value_ for IMG elements
+* Add class **figcaption** for IMG elements
 * Added control to avoid multiple clicks while loading the popup (class **win** in A elements)
 * Fixed bug in the class **ajax-from-** for A elements
 * Added event "ajaxToComplete.htmlplus" in A elements
