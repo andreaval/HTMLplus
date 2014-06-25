@@ -45,7 +45,18 @@ Popular examples:
 ##Changelog
 
 **1.4.0** (not yet released)
-* Add class **menu** for A elements
+* Improved loading script up to 2x for A elements
+* Added support for <A> elements loaded via ajax
+* Add option **win.check** for A elements
+* Add class **zoom-inline** for IMG elements
+* Add class **zoom-popup** for IMG elements
+* Add class **zoom-max-**_value_ for DIV elements
+* Add class **figcaption** for DIV elements
+* Added control to avoid multiple clicks while loading the popup (class **win** in A elements)
+* Fixed bug in the class **ajax-from-** for A elements
+* Added event "ajaxToComplete.htmlplus" in A elements
+* Added AMD support
+* Added Package Manifest
 
 **1.3.2** (2013-09-16)
 * Fixed bug in the creation of a new window
