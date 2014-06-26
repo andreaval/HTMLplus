@@ -1,6 +1,6 @@
 /*!
  * jQuery HTMLplus plugin
- * Version 1.4.0b4
+ * Version 1.4.0b5
  * @requires jQuery v1.5.0 or later
  *
  * Copyright (c) 2013 Andrea Vallorani, andrea.vallorani@gmail.com
@@ -34,8 +34,12 @@
         
         $.each(options.tags,function(i,tag){
             if(!inArray(tag,options.disableTags)){
-                var nodes=$(tag+'[class]',$root);
-                if($root.is(tag+'[class]')) nodes.push($root.get(0));
+                var nodes;
+                if(tag=='A') nodes=$root;
+                else{ 
+                    nodes=$(tag+'[class]',$root);
+                    if($root.is(tag+'[class]')) nodes.push($root.get(0));
+                }
                 if(nodes.length){
                     var tagOptions={};
                     if(typeof options[tag] === 'object'){
@@ -48,11 +52,22 @@
     };
     
     $.fn.HTMLplus.A = function(nodes,options,x){
-        //console.time('loading');
         var IsAnchor = function(url){
-            return (url.toString().charAt(0)==='#') ? true : false;
+            return (url && url.toString().charAt(0)==='#') ? true : false;
+        };
+        var HideTitle = function(el){
+            el=$(el);
+            if(el.is('[title]') && el.is('.'+x+'confirm,.'+x+'dialog,.'+x+'disabled')){
+                el.data('title',el.attr('title')).removeAttr('title');
+            }
+        };
+        var GetTitle = function(el){
+            if(el.data('title')) return el.data('title');
+            else if(el.is('[title]')) return el.attr('title');
+            else return null;
         };
         options = $.extend(true,{
+            prefix: '',
             win: {width:400,height:400,scrollbars:0,toolbar:0,check:true},
             confirm: 'Are you sure you want to open the link?',
             confirmType: false,
@@ -66,18 +81,11 @@
         nodes.each(function(){
             var $this = $(this);
             if(!$this.is('a')){
-                $this.find('a.'+x+'confirm,a.'+x+'dialog,a.'+x+'disabled').each(function(){
-                    if($(this).is('[title]')){
-                        var e=$(this);
-                        e.data('title',e.attr('title')).removeAttr('title');
-                    }
-                });
                 $this.delegate('a[class]','click',parser);
+                $this.delegate('a[class]','mouseenter',HideTitle);
             }
             else if($this.is('[class]')){
-                if($this.is('.'+x+'confirm,.'+x+'dialog,.'+x+'disabled') && $this.is('[title]')){
-                    $this.data('title',$this.attr('title')).removeAttr('title');
-                }
+                HideTitle(this);
                 $this.click(parser);
             }
         });
@@ -85,7 +93,7 @@
         function parser(e){
             var a=$(this);
             if(a.hasClass(x+'disabled')){
-                if(a.data('title') && options.disabledMsg==='alert') alert(a.data('title'));
+                if(GetTitle(a) && options.disabledMsg==='alert') alert(GetTitle(a));
                 return false; 
             }
             if(a.hasClass(x+'print')){
@@ -101,20 +109,18 @@
                 var mask=a.classPre(x+'confirm-mask');
                 if(!mask){
                     if(IsAnchor(url)) mask=url;
-                    else if(a.data('title') && IsAnchor(a.data('title'))){
-                        mask=a.data('title');
-                    }
+                    else if(IsAnchor(GetTitle(a))) mask=GetTitle(a);
                 }
                 else mask='#'+mask;
                 if(mask && $(mask).length){
                     msg=$(mask).html();
-                    if(a.data('title')){
-                        msg=msg.replace(/\[title\]/g,a.data('title'));
+                    if(GetTitle(a)){
+                        msg=msg.replace(/\[title\]/g,GetTitle(a));
                     }
                     msg=msg.replace(/\[href]/g,url);
                     msg=msg.replace(/\[text]/g,a.text());
                 }
-                else if(a.data('title')) msg=a.data('title');
+                else if(GetTitle(a)) msg=GetTitle(a);
 
                 if(options.confirmType!==false){
                     switch(options.confirmType){
@@ -155,26 +161,33 @@
             }
             if(a.hasClass('ajax')){
                 var ajaxSett=$.extend({},options.ajax,a.classPre(x+'ajax',1));
-                if(typeof(a.attr('id'))==='undefined') a.attr('id',(new Date()).getTime());
-                var aId = a.attr('id');
-                ajaxSett.to = (typeof(ajaxSett.to)==='undefined' || !ajaxSett.to) ? 'body' : '#'+ajaxSett.to;
-                ajaxSett.from = (typeof(ajaxSett.from)==='undefined' || !ajaxSett.from) ? null : '#'+ajaxSett.from;
-                var to=$(ajaxSett.to);
-                var localCache=to.children('div[data-rel="'+aId+'"]');
-                var toH=to.height();
-                to.children().hide();
-                if(localCache.length){
-                    localCache.show();
+                if(typeof(ajaxSett.to)!=='undefined' && ajaxSett.to){
+                    if(typeof(a.attr('id'))==='undefined') a.attr('id',(new Date()).getTime());
+                    var aId = a.attr('id');
+                    ajaxSett.to = '#'+ajaxSett.to;
+                    ajaxSett.from = (typeof(ajaxSett.from)==='undefined' || !ajaxSett.from) ? null : '#'+ajaxSett.from;
+                    var to=$(ajaxSett.to);
+                    var localCache=to.children('div[data-rel="'+aId+'"]');
+                    var toH=to.height();
+                    to.children(':not(div[data-rel])').remove();
+                    to.children().hide();
+                    if(localCache.length){
+                        localCache.show();
+                    }
+                    else{
+                        var container=$('<div data-rel="'+aId+'" />');
+                        container.html('<div class="loader" style="text-align:center;line-height:'+toH+'px;">'+ajaxSett.loadMsg+'</div>').appendTo(to);
+                        $.ajax({url:url,dataType:'html'}).done(function(data){
+                            data = $('<div>'+data.replace(/^[\s\S]*<body.*?>|<\/body>[\s\S]*$/g, '')+'</div>');
+                            container.html((ajaxSett.from) ? data.find(ajaxSett.from).html() : data.html());
+                            to.trigger("ajaxToComplete.aplus",{obj:container});
+                            a.trigger("ajaxComplete.aplus",{response:data.html()});
+                        });
+                    }
                 }
                 else{
-                    var container=$('<div data-rel="'+aId+'" />');
-                    container.html('<div class="loader" style="text-align:center;line-height:'+toH+'px;">'+ajaxSett.loadMsg+'</div>').appendTo(to);
                     $.ajax({url:url,dataType:'html'}).done(function(data){
-                        data = $('<div>'+data.replace(/^[\s\S]*<body.*?>|<\/body>[\s\S]*$/g, '')+'</div>');
-                        container.html((ajaxSett.from) ? data.find(ajaxSett.from).html() : data.html());
-                        to.triggerHandler("ajaxToComplete.aplus",{
-                            obj: container
-                        });
+                        a.trigger("ajaxComplete.aplus",{response:data});
                     });
                 }
                 return false;
@@ -203,7 +216,7 @@
                         url=frame;
                     }
                     else url=$(url);
-                    if(a.data('title')) dSett.title=a.data('title');
+                    if(GetTitle(a)) dSett.title=GetTitle(a);
 
                     var wP=$(window).width();
                     var hP=$(window).height();
