@@ -1,6 +1,6 @@
 /*!
  * jQuery HTMLplus plugin
- * Version 1.4.0b6
+ * Version 1.4.0b7
  * @requires jQuery v1.5.0 or later
  *
  * Copyright (c) 2013 Andrea Vallorani, andrea.vallorani@gmail.com
@@ -56,7 +56,7 @@
             return (url && url.toString().charAt(0)==='#') ? true : false;
         };
         var HideTitle = function(el){
-            el=$(el);
+            el=$(el.target);
             if(el.is('[title]') && el.is('.'+x+'confirm,.'+x+'dialog,.'+x+'disabled')){
                 el.data('title',el.attr('title')).removeAttr('title');
             }
