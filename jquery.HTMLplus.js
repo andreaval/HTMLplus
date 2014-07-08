@@ -35,7 +35,7 @@
         $.each(options.tags,function(i,tag){
             if(!inArray(tag,options.disableTags)){
                 var nodes;
-                if(tag=='A') nodes=$root;
+                if(tag==='A') nodes=$root;
                 else{ 
                     nodes=$(tag+'[class]',$root);
                     if($root.is(tag+'[class]')) nodes.push($root.get(0));
